@@ -1,4 +1,4 @@
-name: Deployment with multiple environments
+name: Deploying application based on environment
 
 on:
   push:
@@ -6,7 +6,7 @@ on:
       - main
 
 jobs:
-  Deployment:
+  env_deployment:
     runs-on: ubuntu-latest
 
     strategy:
@@ -15,7 +15,17 @@ jobs:
           - dev
           - qa
           - prod
+        include:
+          - environment: dev
+            app_url: dev.dim.com
+          - environment: qa
+            app_url: qa.dim.com
+          - environment: prod
+            app_url: prod.dim.com
 
     steps:
       - name: Deployment to different environment
-        run: echo "Deploying to ${{ matrix.environment }}"
+        run: |
+          echo "Environment: ${{ matrix.environment }}"
+          echo "Application URL: ${{ matrix.app_url }}"
+          echo "Deploying application to ${{ matrix.app_url }}"
